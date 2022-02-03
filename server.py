@@ -22,13 +22,6 @@ from models import _FoodsInStock, _FoodExpenses, _BeveragesInStock, _BeverageExp
 # remeber to change the ofline stuff to online 
 from datetime import date, datetime, timedelta
 
-# from sqlalchemy.inspection import inspect
-# rels = inspect(Thing).relationships
-# clss = [rel.mapper.class_ for rel in rels]
-
-"""
-GLOBAL
-"""
 
 NOW = datetime.now()
 TODAY = NOW.date()
@@ -103,7 +96,6 @@ def load_user(user_id):
 
 #-----------------------------------------------------------------------------------------------------------
 # classes 
-# a hash table for the item information in the reports
 class ItemsInStockInformation:
     """
         A class to store the amount of differents properties that the different types of food can have.
