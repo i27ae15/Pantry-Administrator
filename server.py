@@ -21,14 +21,14 @@ from models import _FoodsInStock, _FoodExpenses, _BeveragesInStock, _BeverageExp
 # other imports
 # remeber to change the ofline stuff to online 
 from datetime import date, datetime, timedelta
-
+import os
 
 NOW = datetime.now()
 TODAY = NOW.date()
 
 app = Flask(__name__)
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get('DATABASE_URL')
 app.config['WTF_CSRF_ENABLED'] = True
 Bootstrap(app)
 
