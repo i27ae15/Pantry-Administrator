@@ -1,0 +1,57 @@
+:root {
+    --blue: #287bff;
+    --white: #fff;
+    --grey: #f5f5f5;
+    --black1: #222;
+    --black2: #999
+}
+
+.details .ItemsDetails .cardHeader ion-icon{
+    font-size: 30px;
+    color: var(--blue);
+}
+
+.cardBoxBetweenDates{
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.cardBoxSearch {
+    grid-template-columns: repeat(2, 1fr);  
+}
+
+.cardBox .cardForSearch {
+    position: relative;
+    background: var(--white);
+    padding: 30px;
+    border-radius: 20px;
+    display: block;
+    justify-content: space-between;
+    cursor: auto;
+    height: 200px;
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+}
+
+.cardBox .cardForSearch:hover {
+    background: white;
+}
+
+.cardBox .cardForSearch .cardTittle {
+    position: relative;
+    font-weight: 700;
+    font-size: 1.5em;
+    color: var(--blue);
+}
+
+.linkContainer{
+
+    margin: 0 15%;
+    padding: 25px;
+    text-align: center;
+
+}
+
+/* .cardBox .card:hover .cardTittle{
+    color: var(--white);
+} */
+
+

@@ -1,0 +1,108 @@
+{% include('templates/header.html') %}
+
+
+<script src="{{url_for('static', filename='js/datesManager.js')}}" defer></script>
+<script src="{{url_for('static', filename='js/increaseStock.js')}}" defer></script>
+<script src="{{url_for('static', filename='js/index.js')}}" defer></script>
+
+
+<style>
+    body {
+        margin: 40px;
+        align-items: center;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 5%;
+    }
+
+    .inputBox form {
+        width: 100%;
+        align-items: center;
+    }
+
+    .div-btns {
+        margin: 5% 0;
+        /* width: 100%; */
+        text-align: center;
+        /* align-items: center; */
+    }
+
+    .btnsAddDeleteItems {
+        margin-top: 3%;
+    }
+</style>
+
+{% block add_new_items %}
+
+<body onload="daysOptionsManager(0), selectedOptionsDependingOnDate( '{{day}}', '{{month}}', '{{year}}')">
+    <p class="invisible" id="WaterOrFood">{{food}}</p>
+    <h1>Add New Items</h1>
+    <!-- must add a way of determining if the item which will be introduced in the data base alreday exists -->
+    <div class="inputBox">
+        <form action="{{url_for('add_new_items', food=food)}}" method="POST" onsubmit="return validatAddItemsForm();" autocomplete="off">
+            <div class="formInputs row g-3">
+                <div class="col-md-4 rowNumber0">
+                    <label for="nameInput0" class="form-label">Name</label>
+                    <input type="text" class="form-control nameInput" name="nameInput" autocomplete="off">
+                </div>
+
+                <div class="col-md-4 rowNumber0">
+                    <label for="stockInput0" class="form-label">Stock</label>
+                    <input type="number" min="0" class="form-control stockInput" name="stockInput" autocomplete="off">
+                </div>
+
+                <div class="col-md-4 rowNumber0">
+                    <label for="inputType" class="form-label">Type</label>
+                    <select class="form-select inputType" name="inputType">
+                        {% if food: %}
+                        <option selected>Breakfast</option>
+                        <option>Lunch</option>
+                        <option>Snack</option>
+                        <option>Cereal</option>
+                        <option>Fruit</option>
+                        <option>Cookie</option>
+                        <option>Chocolate</option>
+                        <option>Other</option>
+                        {% else: %}
+                        <option>Juice</option>
+                        <option>Water</option>
+                        <option>Soda</option>
+                        <option>Other</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3 btnsAddDeleteItems">
+                <button type="button" class="btn btn-primary" id="addNewItem">Add Item</button>
+                <button type="button" class="btn btn-danger" id="deleteNewItem">Delete Item</button>
+            </div>
+
+            <div id="dateInput" style="margin-left: 39%">
+                {% with submit_button = False, numberInput=0 %}
+                {% include('templates/inputs_for_date.html') %}
+                {% endwith %}
+            </div>
+
+            <div class="div-btns">
+
+                <button type="submit" class="btn btn-primary" id="add_new_items">Confirm</button>
+                {% if food: %}
+                <a href="{{url_for('food_details')}}" class="btn btn-danger" id="cancel">Cancel</a>
+                {% else: %}
+                <a href="{{url_for('beverage_details')}}" class="btn btn-danger" id="cancel">Cancel</a>
+                {% endif %}
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+
+{% endblock %}
+
+
+</html>

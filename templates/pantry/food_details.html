@@ -1,0 +1,458 @@
+{% include('templates/pantry_header.html') %}
+{% include('templates/pantry_options.html') %}
+
+<script src="{{url_for('static', filename='js/datesManager.js')}}" defer></script>
+
+<body onload="daysOptionsManager(0), selectedOptionsDependingOnDate( '{{day}}', '{{month}}', '{{year}}')">
+    {% block food_details %}
+    <!-- main -->
+    <div class="main">
+
+        <!-- cards -->
+        <div class="cardBox cardBoxFood">
+
+            <a href="#">
+                <div class="card">
+                    <div>
+                        <div class="numbers">{{food.total_breakfasts}}</div>
+                        <div class="cardName">Breakfasts in Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img
+                            src="https://img.icons8.com/external-justicon-lineal-color-justicon/80/000000/external-breakfast-hotel-essentials-justicon-lineal-color-justicon.png" />
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="card">
+                    <div>
+                        <div class="numbers">{{food.total_lunch}}</div>
+                        <div class="cardName">Lunch in Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/color/90/000000/pizza-five-eighths.png" />
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="card">
+                    <div>
+                        <div class="numbers">{{food.total_snacks}}</div>
+                        <div class="cardName">Snacks in Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img
+                            src="https://img.icons8.com/external-photo3ideastudio-lineal-color-photo3ideastudio/80/000000/external-snacks-home-office-photo3ideastudio-lineal-color-photo3ideastudio.png" />
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="card">
+                    <div>
+                        <div class="numbers">{{food.total_cereals}}</div>
+                        <div class="cardName">Cereals in Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img
+                            src="https://img.icons8.com/external-photo3ideastudio-lineal-color-photo3ideastudio/80/000000/external-cereals-hostel-photo3ideastudio-lineal-color-photo3ideastudio.png" />
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="card">
+                    <div>
+                        <div class="numbers">{{food.total_fruits}}</div>
+                        <div class="cardName">Fruits in Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img
+                            src="https://img.icons8.com/external-photo3ideastudio-lineal-color-photo3ideastudio/90/000000/external-fruits-restaurant-photo3ideastudio-lineal-color-photo3ideastudio.png" />
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="card">
+                    <div>
+                        <div class="numbers">{{food.total_cookies}}</div>
+                        <div class="cardName">Cookies in Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/plasticine/90/000000/cookies.png" />
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="card">
+                    <div>
+                        <div class="numbers">{{food.total_chocolates}}</div>
+                        <div class="cardName">Chocolates in Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img
+                            src="https://img.icons8.com/external-vitaliy-gorbachev-lineal-color-vitaly-gorbachev/80/000000/external-chocolate-bad-habits-vitaliy-gorbachev-lineal-color-vitaly-gorbachev.png" />
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="card">
+                    <div>
+                        <div class="numbers">{{food.total_others}}</div>
+                        <div class="cardName">Others in Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/color/90/000000/vegetarian-food.png" />
+                    </div>
+                </div>
+            </a>
+
+            {% if current_user.level > 0 and current_user.level !=1: %}
+
+            <a href="{{url_for('get_increase_stock')}}">
+                <div class="card">
+                    <div>
+                        <div class="numbers">+</div>
+                        <div class="cardName">Increase Food Stock</div>
+                    </div>
+                    <div class="iconBx">
+
+                    </div>
+                </div>
+            </a>
+            {% endif %}
+        </div>
+
+        {% if not edit_item: %}
+
+        {% with numberInput=0 %}
+
+        <div id=dateInput style="margin-left: 25%;">
+            <form action="{{url_for('food_details')}}" method="post">
+                {% include('templates/inputs_for_date.html') %}
+            </form>
+        </div>
+
+        {% endwith %}
+
+        {% endif %}
+
+        <div class="details detailsFood">
+            <!-- order details list -->
+
+            <div class="ItemsDetails">
+                {% if edit_item: %}
+                <form action="{{url_for('decrease_items_in_data_base', total_elements=total_items, food=True)}}"
+                    method="POST">
+                    {% endif %}
+                    <div class="cardHeader">
+                        <h2>Details</h2>
+                        {% if current_user.level != 1:%}
+                        <a
+                            href="{{url_for('food_details', edit_item=True, day=day, month=month, year=year, searcher=False)}}">
+                            <h2 style="cursor: pointer;">Decrease Stock</h2>
+                        </a>
+                        {% endif %}
+
+                        {% if edit_item: %}
+
+                        <input type="number" value={{day}} class="invisible" name="day">
+                        <input type="number" value={{month}} class="invisible" name="month">
+                        <input type="number" value={{year}} class="invisible" name="year">
+
+                        <button id="confirmUpdateDataBaseFood" type="submit">
+                            <h2 class="btn btn-green" style="color: white;">Confirm</h2>
+                        </button>
+
+                        <a href="{{url_for('food_details', edit_item=False)}}">
+                            <h2 class="btn btn-red" style="color: white;">Cancel</h2>
+                        </a>
+
+                        {% else: %}
+                        <h2></h2>
+                        <h2></h2>
+                        <h2></h2>
+                        <h2></h2>
+                        {% endif %}
+
+                        <h2>Date: {{day}}-{{month}}-{{year}}</h2>
+                    </div>
+                    <table class="foodDetails">
+                        <thead>
+                            <tr>
+                                <td>Name</td>
+                                {% if edit_item %}
+                                <td>Actual Stock</td>
+                                <td>New Stock</td>
+                                {% else: %}
+                                <td>Stock</td>
+                                {% endif %}
+                                <td>Type</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for breakfast in breakfasts %}
+                            <tr>
+                                <td>{{breakfast.name.capitalize()}}</td>
+
+                                {% if not edit_item: %}
+                                <td>{{breakfast.stock}}</td>
+                                {% else: %}
+                                <td style="color: gray;" class="oldStock">{{breakfast.stock}}</td>
+                                <td>
+                                    <input type="number" value="{{breakfast.stock}}" min="0" max="{{breakfast.stock}}"
+                                        class="formNewStock" name="newStock">
+                                </td>
+
+                                <input type="text" class="invisible formOldStock" name=oldStock
+                                    value="{{breakfast.stock}}">
+                                <input type="text" class="invisible formType" name=itemType value="breakfast">
+                                <input type="text" class="invisible formItemId" name=itemId
+                                    value="{{breakfast.item_id}}">
+
+                                {% endif %}
+
+                                <td><span class="itemType breakfast">Breakfast</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for _lunch in lunch %}
+                            <tr>
+                                <td>{{_lunch.name.capitalize()}}</td>
+
+                                {% if not edit_item: %}
+                                <td>{{_lunch.stock}}</td>
+                                {% else: %}
+                                <td style="color: gray;" class="oldStock">{{_lunch.stock}}</td>
+                                <td>
+                                    <input type="number" value="{{_lunch.stock}}" min="0" max="{{_lunch.stock}}"
+                                        class="formNewStock" name="newStock">
+                                </td>
+
+                                <input type="text" class="invisible formOldStock" name=oldStock
+                                    value="{{_lunch.stock}}">
+                                <input type="text" class="invisible formType" name=itemType value="lunch">
+                                <input type="text" class="invisible formItemId" name=itemId value="{{_lunch.item_id}}">
+                                {% endif %}
+
+                                <td><span class="itemType lunch">Lunch</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for snack in snacks %}
+                            <tr>
+                                <td>{{snack.name.capitalize()}}</td>
+
+                                {% if not edit_item: %}
+                                <td>{{snack.stock}}</td>
+                                {% else: %}
+                                <td style="color: gray;" class="oldStock">{{snack.stock}}</td>
+                                <td>
+                                    <input type="number" value="{{snack.stock}}" min="0" max="{{snack.stock}}"
+                                        class="formNewStock" name="newStock">
+                                </td>
+
+                                <input type="text" class="invisible formOldStock" name=oldStock value="{{snack.stock}}">
+                                <input type="text" class="invisible formType" name=itemType value="snack">
+                                <input type="text" class="invisible formItemId" name=itemId value="{{snack.item_id}}">
+                                {% endif %}
+
+                                <td><span class="itemType snack">Snack</span></td>
+
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for cereal in cereals %}
+                            <tr>
+                                <td>{{cereal.name.capitalize()}}</td>
+
+                                {% if not edit_item: %}
+                                <td>{{cereal.stock}}</td>
+                                {% else: %}
+                                <td style="color: gray;" class="oldStock">{{cereal.stock}}</td>
+                                <td>
+                                    <input type="number" value="{{cereal.stock}}" min="0" max="{{cereal.stock}}"
+                                        class="formNewStock" name="newStock">
+                                </td>
+
+                                <input type="text" class="invisible formOldStock" name=oldStock
+                                    value="{{cereal.stock}}">
+                                <input type="text" class="invisible formType" name=itemType value="cereal">
+                                <input type="text" class="invisible formItemId" name=itemId value="{{cereal.item_id}}">
+                                {% endif %}
+
+                                <td><span class="itemType cereal">Cereal</span></td>
+
+                                <p class="invisible itemId">{{cereal.id}}</p>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for fruit in fruits %}
+                            <tr>
+                                <td>{{fruit.name.capitalize()}}</td>
+
+                                {% if not edit_item: %}
+                                <td>{{fruit.stock}}</td>
+                                {% else: %}
+                                <td style="color: gray;" class="oldStock">{{fruit.stock}}</td>
+                                <td>
+                                    <input type="number" value="{{fruit.stock}}" min="0" max="{{fruit.stock}}"
+                                        class="formNewStock" name="newStock">
+                                </td>
+
+                                <input type="text" class="invisible formOldStock" name=oldStock value="{{fruit.stock}}">
+                                <input type="text" class="invisible formType" name=itemType value="fruit">
+                                <input type="text" class="invisible formItemId" name=itemId value="{{fruit.item_id}}">
+                                {% endif %}
+
+                                <td><span class="itemType fruit">Fruits</span></td>
+
+                                <p class="invisible itemId">{{fruit.id}}</p>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for cookie in cookies %}
+                            <tr>
+                                <td>{{cookie.name.capitalize()}}</td>
+
+                                {% if not edit_item: %}
+                                <td>{{cookie.stock}}</td>
+                                {% else: %}
+                                <td style="color: gray;" class="oldStock">{{cookie.stock}}</td>
+                                <td>
+                                    <input type="number" value="{{cookie.stock}}" min="0" max="{{cookie.stock}}"
+                                        class="formNewStock" name="newStock">
+                                </td>
+
+                                <input type="text" class="invisible formOldStock" name=oldStock
+                                    value="{{cookie.stock}}">
+                                <input type="text" class="invisible formType" name=itemType value="cookie">
+                                <input type="text" class="invisible formItemId" name=itemId value="{{cookie.item_id}}">
+                                {% endif %}
+
+                                <td><span class="itemType cookie">Cookies</span></td>
+
+                                <p class="invisible itemId">{{cookie.id}}</p>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for chocolate in chocolates %}
+                            <tr>
+                                <td>{{chocolate.name.capitalize()}}</td>
+
+                                {% if not edit_item: %}
+                                <td>{{chocolate.stock}}</td>
+                                {% else: %}
+                                <td style="color: gray;" class="oldStock">{{chocolate.stock}}</td>
+                                <td>
+                                    <input type="number" value="{{chocolate.stock}}" min="0" max="{{chocolate.stock}}"
+                                        class="formNewStock" name="newStock">
+                                </td>
+
+                                <input type="text" class="invisible formOldStock" name=oldStock
+                                    value="{{chocolate.stock}}">
+                                <input type="text" class="invisible formType" name=itemType value="chocolate">
+                                <input type="text" class="invisible formItemId" name=itemId
+                                    value="{{chocolate.item_id}}">
+                                {% endif %}
+
+                                <td><span class="itemType chocolate">Chocolates</span></td>
+
+                                <p class="invisible itemId">{{chocolate.id}}</p>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for other in others %}
+                            <tr>
+                                <td>{{other.name.capitalize()}}</td>
+
+                                {% if not edit_item: %}
+                                <td>{{other.stock}}</td>
+                                {% else: %}
+                                <td style="color: gray;" class="oldStock">{{other.stock}}</td>
+                                <td>
+                                    <input type="number" value="{{other.stock}}" min="0" max="{{other.stock}}"
+                                        class="formNewStock" name="newStock">
+                                </td>
+
+                                <input type="text" class="invisible formOldStock" name=oldStock value="{{other.stock}}">
+                                <input type="text" class="invisible formType" name=itemType value="other">
+                                <input type="text" class="invisible formItemId" name=itemId value="{{other.item_id}}">
+                                {% endif %}
+
+                                <td><span class="itemType other">Others</span></td>
+
+                                <p class="invisible itemId">{{other.id}}</p>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% if current_user.level > 0 and current_user.level != 1: %}
+                            <tr>
+                                <td class="addNewItem" style="padding-top:40px;">
+                                    <a style="text-decoration: none; color: #287bff"
+                                        href="{{url_for('add_new_items', food=True)}}">Add</a>
+                                    <br>
+                                    <br>
+                                    <a style="text-decoration: none; color: red"
+                                        href="{{url_for('delete_items')}}">Delete</a>
+                                </td>
+
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            {% endif %}
+
+                        </tbody>
+                    </table>
+                    {% if edit_item: %}
+                </form>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        btnConfirm = document.getElementById('confirmUpdateDataBaseFood');
+
+        if (btnConfirm != null) {
+            btnConfirm.addEventListener('click', function () {
+                inputsForNewStock = document.getElementByClassName('formNewStock');
+                inputsForOldStock = document.getElementByClassName('formOldStock');
+                inputsForItemType = document.getElementByClassName('formType');
+                inputsForItemId = document.getElementByClassName('formItemId');
+
+                newStock = document.getElementByClassName('newStock');
+                oldStock = document.getElementByClassName('oldStock');
+                itemsType = document.getElementByClassName('itemType');
+                itemIds = document.getElementByClassName('itemId');
+
+                for (let n = 0; n < newStock.length; n++) {
+                    inputsForNewStock[n].value = newStock[n].textContent;
+                    inputsForOldStock[n].value = oldStock[n].textContent;
+                    inputsForItemType[n].value = itemsType[n].textContent;
+                    inputsForItemId[n].value = itemIds[n].textContent;
+                }
+            });
+        }
+    </script>
+
+    <script src="{{url_for('static', filename='js/foodBeverages.js')}}"></script>
+</body>
+
+{% endblock %}
+{% include('templates/pantry_footer.html') %}

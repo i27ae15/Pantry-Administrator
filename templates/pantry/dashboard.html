@@ -1,0 +1,184 @@
+{% include('templates/pantry_header.html') %}
+{% include('templates/pantry_options.html') %}
+<!-- main -->
+
+{% block dashboard %}
+<div class="main">
+
+    <!-- cards -->
+    <div class="cardBox">
+
+        <a href="{{url_for('food_details')}}">
+            <div class="card">
+                <div>
+                    <div class="numbers">{{food.total}}</div>
+                    <div class="cardName">Food in Stock</div>
+                </div>
+                <div class="iconBx">
+                    <img src="https://img.icons8.com/emoji/80/000000/pizza-emoji.png" />
+                </div>
+            </div>
+        </a>
+
+        <a href="{{url_for('beverage_details')}}">
+            <div class="card">
+                <div>
+                    <div class="numbers">{{beverages.total}}</div>
+                    <div class="cardName">Beverages in Stock</div>
+                </div>
+                <div class="iconBx">
+                    <img src="https://img.icons8.com/color/80/000000/water.png"/>
+                </div>
+            </div>
+        </a>
+
+        <a href="#">
+            <div class="card">
+                <div>
+                    <div class="numbers">{{beverages.total + food.total}}</div>
+                    <div class="cardName">Total pantry stock</div>
+                </div>
+                <div class="iconBx">
+                    <img src="https://img.icons8.com/external-photo3ideastudio-lineal-color-photo3ideastudio/70/000000/external-fast-food-celebration-photo3ideastudio-lineal-color-photo3ideastudio.png"/>
+                </div>
+            </div>
+        </a>
+
+        <a href="{{url_for('people')}}">
+            <div class="card">
+                <div>
+                    <div class="numbers">{{average_people_in_last_five_days}}</div>
+                    <div class="cardName">Attendance in the week</div>
+                </div>
+                <div class="iconBx">
+                    <img src="https://img.icons8.com/office/60/000000/conference-call.png"/>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <div class="details">
+        <!-- order details list -->
+
+        <div class="ItemsDetails">
+            <div class="cardHeader">
+                <h2>Total Stock</h2>
+                <a href="{{url_for('reports')}}" class="btn">View All</a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Stock</td>
+                        <td>Type</td>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td>Breakfast</td>
+                        <td>{{food.total_breakfasts}}</td>
+                        <td><span class="itemType food">Food</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Lunchs</td>
+                        <td>{{food.total_lunch}}</td>
+                        <td><span class="itemType food">Food</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Snacks</td>
+                        <td>{{food.total_snacks}}</td>
+                        <td><span class="itemType food">Food</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Cereals</td>
+                        <td>{{food.total_cereals}}</td>
+                        <td><span class="itemType food">Food</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Fruits</td>
+                        <td>{{food.total_fruits}}</td>
+                        <td><span class="itemType food">Food</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Cookies</td>
+                        <td>{{food.total_cookies}}</td>
+                        <td><span class="itemType food">Food</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Chocolates</td>
+                        <td>{{food.total_chocolates}}</td>
+                        <td><span class="itemType food">Food</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Others</td>
+                        <td>{{food.total_others}}</td>
+                        <td><span class="itemType food">Food</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Sodas</td>
+                        <td>{{beverages.total_sodas}}</td>
+                        <td><span class="itemType drink">Drinks</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Juices</td>
+                        <td>{{beverages.total_juices}}</td>
+                        <td><span class="itemType drink">Drinks</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Waters</td>
+                        <td>{{beverages.total_waters}}</td>
+                        <td><span class="itemType drink">Drinks</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Others</td>
+                        <td>{{beverages.total_others}}</td>
+                        <td><span class="itemType drink">Drinks</span></td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- New Customers -->
+        <div class="recentCustomers">
+            <div class="cardHeader">
+                <h2>Attendance in the last five days</h2>
+            </div>
+            <table>
+
+                <thead>
+                    <tr>
+                        <td>Day</td>
+                        <td>Attendance</td>
+                    </tr>
+                </thead>
+
+                {% for n in range(last_five_days|length) %}
+                <tr>
+                    <td width='60px'>{{last_five_days[n]}}</td>
+                    <td>{{people_in_last_five_days[n].total}}</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+{% include('templates/pantry_footer.html') %}

@@ -1,0 +1,41 @@
+<div class="specificDate" id="specificDate{{numberInput}}">
+    <div class="row">
+        <div class="col-auto">
+            <select class="form-select form-select-sm mb-1 daySelect{{numberInput}}" id="daySelect{{numberInput}}"
+                name="daySelect{{numberInput}}">
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select class="form-select form-select-sm mb-1 monthSelect{{numberInput}}" id="monthSelect{{numberInput}}"
+                name="monthSelect{{numberInput}}">
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select class="form-select form-select-sm mb-1 yearSelect{{numberInput}}" id="yearSelect{{numberInput}}"
+                name="yearSelect{{numberInput}}">
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+            </select>
+        </div>
+        {% if submit_button != False: %}
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+        </div>
+        {% endif %}
+    </div>
+</div>

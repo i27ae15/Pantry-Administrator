@@ -1,0 +1,15 @@
+{% extends "pantry/base.html" %}
+{% block content %}
+
+<div class="box">
+    <h1>Register</h1>
+    <form action="{{ url_for('register') }}" method="post">
+        <input type="text" name="name" placeholder="Nombre" required="required" />
+        <input type="email" name="email" placeholder="Email" required="required" />
+        <input type="password" name="password" placeholder="Contraseña" required="required" />
+        <button type="submit" class="btn btn-primary btn-block btn-large">Sign up.</button>
+        <p>Please do not put any real information and be respectful</p>
+    </form>
+</div>
+
+{% endblock %}

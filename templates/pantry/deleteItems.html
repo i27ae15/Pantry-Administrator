@@ -1,0 +1,226 @@
+{% include('templates/pantry_header.html') %}
+{% include('templates/header.html') %}
+
+<script src="{{url_for('static', filename='js/deleteItems.js')}}" defer></script>
+
+{% block items_to_delete %}
+
+<body onLoad="getStocks(food=false, beverages=false, visible=false, itemToEvaluate='all')">
+
+    <div class="details detailsFood">
+        <!-- order details list -->
+
+        <a class="btn btn-success btn-lg" href="{{url_for('food_details')}}">Confirmar</a>
+
+
+        <div class="ItemsDetails">
+
+            <table class="foodDetails">
+                <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>Name</td>
+                        <td>Stock</td>
+                        <td>Type</td>
+                        <td>Delete</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if food: %}
+                    <div class="FoodItems">
+
+                        {% for n in range(food.breakfasts|length): %}
+                        <tr class="breakfastRow" id="breakfastRow{{n}}">
+                            <td>{{food.breakfasts[n].item_id}}</td>
+                            <td>{{food.breakfasts[n].name}}</td>
+                            <td class="initialStock">{{food.breakfasts[n].stock}}</td>
+
+                            <td><span class="itemType breakfast">Breakfast</span></td>
+                            <td><button class="btn btn-danger btn-lg"
+                                    onclick="deleteItem('{{food.breakfasts[n].item_id}}', 0, '{{food.breakfasts[n].name}}', 'breakfastRow{{n}}', true)">
+                                    Delete
+                                </button>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(food.lunch|length): %}
+                        <tr class="lunchRow" id="lunchRow{{n}}">
+                            <td>{{food.lunch[n].item_id}}</td>
+                            <td>{{food.lunch[n].name}}</td>
+                            <td class="initialStock">{{food.lunch[n].stock}}</td>
+
+                            <td><span class="itemType lunch">Lunch</span></td>
+                            <td><button class="btn btn-danger btn-lg"
+                                    onclick="deleteItem('{{food.lunch[n].item_id}}', 1, '{{food.lunch[n].name}}', 'lunchRow{{n}}', true)">
+                                    Delete
+                                </button>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(food.snacks|length): %}
+                        <tr class="snackRow" id="snackRow{{n}}">
+                            <td>{{food.snacks[n].item_id}}</td>
+                            <td>{{food.snacks[n].name}}</td>
+                            <td class="initialStock">{{food.snacks[n].stock}}</td>
+
+                            <td><span class="itemType snack">Snack</span></td>
+                            <td><button class="btn btn-danger btn-lg"
+                                    onclick="deleteItem('{{food.snacks[n].item_id}}', 2, '{{food.snacks[n].name}}', 'snackRow{{n}}', true)">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(food.cereals|length): %}
+                        <tr class="cerealRow" id="cerealRow{{n}}">
+                            <td>{{food.cereals[n].item_id}}</td>
+                            <td>{{food.cereals[n].name}}</td>
+                            <td class="initialStock">{{food.cereals[n].stock}}</td>
+
+                            <td><span class="itemType cereal">Cereal</span></td>
+                            <td><button class="btn btn-danger btn-lg"
+                                    onclick="deleteItem('{{food.cereals[n].item_id}}', 3, '{{food.cereals[n].name}}', 'cerealRow{{n}}', true)">
+                                    Delete
+                                </button>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(food.fruits|length): %}
+                        <tr class="fruitRow" id="fruitRow{{n}}">
+                            <td>{{food.fruits[n].item_id}}</td>
+                            <td>{{food.fruits[n].name}}</td>
+                            <td class="initialStock">{{food.fruits[n].stock}}</td>
+
+                            <td><span class="itemType fruit">Fruit</span></td>
+                            <td><button class="btn btn-danger btn-lg" onclick="deleteItem('{{food.fruits[n].item_id}}', 4, '{{food.fruits[n].name}}', 
+                            'fruitRow{{n}}', true)">
+                                    Delete
+                                </button>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(food.cookies|length): %}
+                        <tr class="cookieRow" id="cookieRow{{n}}">
+                            <td>{{food.cookies[n].item_id}}</td>
+                            <td>{{food.cookies[n].name}}</td>
+                            <td class="initialStock">{{food.cookies[n].stock}}</td>
+
+                            <td><span class="itemType cookie">Cookie</span></td>
+                            <td><button class="btn btn-danger btn-lg" onclick="deleteItem('{{food.cookies[n].item_id}}', 5, '{{food.cookies[n].name}}', 
+                            'cookieRow{{n}}', true)">
+                                    Delete
+                                </button>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(food.chocolates|length): %}
+                        <tr class="chocolateRow" id="chocolateRow{{n}}">
+                            <td>{{food.chocolates[n].item_id}}</td>
+                            <td>{{food.chocolates[n].name}}</td>
+                            <td class="initialStock">{{food.chocolates[n].stock}}</td>
+
+                            <td><span class="itemType chocolate">Chocolate</span></td>
+                            <td><button class="btn btn-danger btn-lg" onclick="deleteItem('{{food.chocolates[n].item_id}}', 6, '{{food.chocolates[n].name}}', 
+                            'chocolateRow{{n}}', true)">
+                                    Delete
+                                </button>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(food.others|length): %}
+                        <tr class="otherFoodRow" id="otherFoodRow{{n}}">
+                            <td>{{food.others[n].item_id}}</td>
+                            <td>{{food.others[n].name}}</td>
+                            <td class="initialStock">{{food.others[n].stock}}</td>
+
+                            <td><span class="itemType other">Other</span></td>
+                            <td><button class="btn btn-danger btn-lg" onclick="deleteItem('{{food.others[n].item_id}}', 7, '{{food.others[n].name}}', 
+                            'otherFoodRow{{n}}', true)">
+                                    Delete
+                                </button>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </div>
+                    {% else: %}
+
+                    <div class="beveragesItems">
+
+                        {% for n in range(beverages.water|length): %}
+                        <tr class="waterRow" id="waterRow{{n}}">
+                            <td>{{beverages.water[n].item_id}}</td>
+                            <td>{{beverages.water[n].name}}</td>
+                            <td class="initialStock">{{beverages.water[n].stock}}</td>
+
+                            <td><span class="itemType water">Water</span></td>
+                            <td><button class="btn btn-danger btn-lg"
+                                    onclick="deleteItem('{{beverages.water[n].item_id}}', 0, '{{beverages.water[n].name}}', 'waterRow{{n}}', false)">
+                                    Delete </button>
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(beverages.juices|length): %}
+                        <tr class="juiceRow" id="juiceRow{{n}}">
+                            <td>{{beverages.juices[n].item_id}}</td>
+                            <td>{{beverages.juices[n].name}}</td>
+                            <td class="initialStock">{{beverages.juices[n].stock}}</td>
+
+                            <td><span class="itemType juice">Juice</span></td>
+                            <td><button class="btn btn-danger btn-lg"
+                                    onclick="deleteItem('{{beverages.juices[n].item_id}}', 1, '{{beverages.juices[n].name}}', 'juiceRow{{n}}', false)">
+                                    Delete </button>
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(beverages.sodas|length): %}
+                        <tr class="sodaRow" id="sodaRow{{n}}">
+                            <td>{{beverages.sodas[n].item_id}}</td>
+                            <td>{{beverages.sodas[n].name}}</td>
+                            <td class="initialStock">{{beverages.sodas[n].stock}}</td>
+
+                            <td><span class="itemType soda">Soda</span></td>
+                            <td><button class="btn btn-danger btn-lg"
+                                    onclick="deleteItem('{{beverages.sodas[n].item_id}}', 2, '{{beverages.sodas[n].name}}', 'sodaRow{{n}}', false)">
+                                    Delete </button>
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(beverages.others|length): %}
+                        <tr class="otherRow" id="otherRow{{n}}">
+                            <td>{{beverages.others[n].item_id}}</td>
+                            <td>{{beverages.others[n].name}}</td>
+                            <td class="initialStock">{{beverages.others[n].stock}}</td>
+
+                            <td><span class="itemType other">Other</span></td>
+                            <td><button class="btn btn-danger btn-lg"
+                                    onclick="deleteItem('{{beverages.others[n].item_id}}', 3, '{{beverages.others[n].name}}', 'otherRow{{n}}', false)">
+                                    Delete </button>
+                        </tr>
+                        {% endfor %}
+                    </div>
+
+                    {% endif %}
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+
+{% endblock %}
+{% include('templates/pantry_footer.html') %}

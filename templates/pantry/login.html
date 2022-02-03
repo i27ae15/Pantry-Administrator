@@ -1,0 +1,29 @@
+{% extends "pantry/base.html" %}
+{% block content %}
+
+<div class="box">
+
+    <h1>Login</h1>
+
+    {% if error: %}
+    <p> {{error}} </p>
+    {% endif %}
+
+    {% with messages = get_flashed_messages() %}
+    {% for message in messages %}
+    <p>{{message}}</p>
+    {% endfor %}
+    {% endwith %}
+
+    <form action="{{ url_for('login') }}" method="post">
+        <input type="text" name="email" placeholder="Email" required="required" />
+        <input type="password" name="password" placeholder="Contraseña" required="required" />
+        <button type="submit" class="btn btn-primary btn-block btn-large">Login.</button>
+
+        <p>User: admin@email.com</p>
+        <p>Password: ipQruMsDNir6caN</p>
+
+    </form>
+</div>
+
+{% endblock %}

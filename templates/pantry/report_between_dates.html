@@ -1,0 +1,564 @@
+{% include('templates/pantry_header.html') %}
+
+{% block report_for_between_dates %}
+
+<script src="{{url_for('static', filename='js/datesManager.js')}}" defer></script>
+<script src="{{url_for('static', filename='js/reports.js')}}" defer></script>
+
+{% if not report_for_share: %}
+
+{% include('templates/pantry_options.html') %}
+
+<body
+    onLoad="daysOptionsManager(0), daysOptionsManager(1), daysOptionsManager(2), selectedOptionsDependingOnDate('{{day}}', '{{month}}', '{{year}}')">
+    <div class="main">
+
+        <div class="cardBox cardBoxSearch">
+
+            <div class="card cardForSearch">
+                <div>
+                    <div class="cardTittle">Query by Date</div>
+                    <div class="inputs">
+                        <form action="{{url_for('reports')}}" method="POST">
+                            {% with numberInput=0 %}
+                            {% include('templates/inputs_for_date.html') %}
+                            {% endwith %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card cardForSearch">
+                <div>
+                    <div class="cardTittle">Query by a Date Range</div>
+                    <div class="inputs">
+                        <form action="{{url_for('reports', between_dates=True, date=False)}}"
+                            onsubmit="return validateDates()" method="POST">
+                            {% with numberInput=1, submit_button=False %}
+                            {% include('templates/inputs_for_date.html') %}
+                            {% endwith %}
+
+                            {% with numberInput=2 %}
+                            {% include('templates/inputs_for_date.html') %}
+                            {% endwith %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="cardBox cardBoxBetweenDates">
+            <div class="card">
+                <div>
+                    <div class="numbers" id="averageFoodInStock">{{average_foods_in_stock}}</div>
+                    <div class="cardName">Average Food in Stock</div>
+                </div>
+                <div class="iconBx">
+                    <img src="https://img.icons8.com/emoji/80/000000/pizza-emoji.png" />
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="numbers" id="averageBeveragesInStock">{{average_beverages_in_stock}}</div>
+                    <div class="cardName">Average Drink in Stock</div>
+                </div>
+                <div class="iconBx">
+                    <img src="https://img.icons8.com/color/80/000000/water.png" />
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="numbers" id="averageFoodExpenses">{{average_food_expenses}}</div>
+                    <div class="cardName">Average Food Consumed</div>
+                </div>
+                <div class="iconBx">
+                    <img src="https://img.icons8.com/emoji/80/000000/pizza-emoji.png" />
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="numbers" id="averageBeveragesExpenses">{{average_beverages_expenses}}</div>
+                    <div class="cardName">Average Drinks consumed</div>
+                </div>
+                <div class="iconBx">
+                    <img src="https://img.icons8.com/color/80/000000/water.png" />
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="numbers">{{average_people}}</div>
+                    <div class="cardName">Average Attendance</div>
+                </div>
+                <div class="iconBx">
+                    <img src="https://img.icons8.com/office/60/000000/conference-call.png" />
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="numbers">{{total_days}}</div>
+                    <div class="cardName">Days Evaluated</div>
+                </div>
+                <div class="iconBx">
+                    <img src="https://img.icons8.com/color/80/000000/calendar.png" />
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="numbers" id="workedDays">{{worked_days}}</div>
+                    <div class="cardName">Worked Days</div>
+                </div>
+                <div class="iconBx">
+                    <img
+                        src="https://img.icons8.com/external-konkapp-outline-color-konkapp/80/000000/external-computer-electronic-devices-konkapp-outline-color-konkapp.png" />
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="numbers">{{no_worked_days}}</div>
+                    <div class="cardName">No Worked Days</div>
+                </div>
+                <div class="iconBx">
+                    <img src="https://img.icons8.com/fluency/80/000000/cancel.png" />
+                </div>
+            </div>
+        </div>
+
+        {% if report_for_share and show_link: %}
+        <div class="card linkContainer">
+            <h5>Click to copy the link to share</h5>
+            <h6 class="invisible">
+                http://127.0.0.1:5000{{url_for('report_between_dates', report_for_share=True, show_link=False, start_date=start_date, end_date=end_date, day=day, month=month, year=year)}}
+            </h6>
+        </div>
+        {% endif %}
+
+        <div class="details detailsFood">
+            <!-- order details list -->
+
+            <div class="ItemsDetails">
+                <div class="cardHeader">
+                    <h2>Datails</h2>
+                    {% if not report_for_share and current_user.level != 1: %}
+                    <a
+                        href="{{url_for('report_between_dates', start_date=start_date, end_date=end_date, day=day, month=month, year=year, report_for_share=True, show_link=True)}}">
+                        <h2>Generate Report</h2>
+
+                    </a>
+                    {% endif %}
+
+                    <h2> {{start_date}} - {{end_date}} </h2>
+                </div>
+
+                <!-- Filters -->
+
+                {% include('templates/filters.html') %}
+
+                <table class="foodDetails">
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>Average Initial Stock</td>
+                            <td>Average Final Stock</td>
+                            <td>Average Daily Consumed</td>
+                            <td>Total Consumed</td>
+                            <td>Class</td>
+                            <td>Type</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for n in range(items_between_dates['BREAKFAST']|length) %}
+                        <tr class="breakfastRow">
+                            <td class="name">{{items_between_dates['BREAKFAST'][n].capitalize()}}</td>
+
+                            <td class="initialStock">{{initial_average_breakfast_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_breakfast_stock[n]}}</td>
+
+                            <td>{{item_breakfast_average_consumed[n]}}</td>
+                            <td class="totalConsumed">{{total_item_breakfast_consumed[n]}}</td>
+
+                            <td><span class="itemType food">Food</span></td>
+                            <td><span class="itemType breakfast">Breakfast</span></td>
+
+                        </tr>
+                        {% endfor %}
+
+
+                        {% for n in range(items_between_dates['LUNCH']|length) %}
+                        <tr class="lunchRow">
+                            <td class="name">{{items_between_dates['LUNCH'][n].capitalize()}}</td>
+
+                            <td class="initialStock">{{initial_average_lunch_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_lunch_stock[n]}}</td>
+
+                            <td>{{item_lunch_average_consumed[n]}}</td>
+                            <td class="totalConsumed">{{total_item_lunch_consumed[n]}}</td>
+
+                            <td><span class="itemType food">Food</span></td>
+                            <td><span class="itemType lunch">Lunch</span></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(items_between_dates['SNACK']|length) %}
+                        <tr class="snackRow">
+                            <td class="name">{{items_between_dates['SNACK'][n].capitalize()}}</td>
+
+                            <td class="initialStock">{{initial_average_snacks_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_snacks_stock[n]}}</td>
+
+                            <td>{{item_snack_average_consumed[n]}}</td>
+                            <td class="totalConsumed">{{total_item_snack_consumed[n]}}</td>
+
+                            <td><span class="itemType food">Food</span></td>
+                            <td><span class="itemType snack">Snack</span></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(items_between_dates['CEREAL']|length) %}
+                        <tr class="cerealRow">
+                            <td class="name">{{items_between_dates['CEREAL'][n].capitalize()}}</td>
+
+                            <td class="initialStock">{{initial_average_cereals_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_cereals_stock[n]}}</td>
+
+                            <td>{{item_cereal_average_consumed[n]}}</td>
+                            <td class="totalConsumed">{{total_item_cereal_consumed[n]}}</td>
+
+                            <td><span class="itemType food">Food</span></td>
+                            <td><span class="itemType cereal">Cereal</span></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(items_between_dates['FRUIT']|length) %}
+                        <tr class="fruitRow">
+                            <td class="name">{{items_between_dates['FRUIT'][n].capitalize()}}</td>
+
+                            <td class="initialStock">{{initial_average_fruits_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_fruits_stock[n]}}</td>
+
+                            <td>{{item_fruit_average_consumed[n]}}</td>
+                            <td class="totalConsumed">{{total_item_fruit_consumed[n]}}</td>
+
+                            <td><span class="itemType food">Food</span></td>
+                            <td><span class="itemType fruit">Fruit</span></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(items_between_dates['COOKIE']|length) %}
+                        <tr class="cookieRow">
+                            <td class="name">{{items_between_dates['COOKIE'][n].capitalize()}}</td>
+
+                            <td class="initialStock">{{initial_average_cookies_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_cookies_stock[n]}}</td>
+
+                            <td>{{item_cookie_average_consumed[n]}}</td>
+                            <td class="totalConsumed">{{total_item_cookie_consumed[n]}}</td>
+
+                            <td><span class="itemType food">Food</span></td>
+                            <td><span class="itemType cookie">Cookie</span></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(items_between_dates['CHOCOLATE']|length) %}
+                        <tr class="chocolateRow">
+                            <td class="name">{{items_between_dates['CHOCOLATE'][n].capitalize()}}</td>
+
+                            <td class="initialStock">{{initial_average_chocolates_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_chocolates_stock[n]}}</td>
+
+                            <td>{{item_chocolate_average_consumed[n]}}</td>
+                            <td class="totalConsumed">{{total_item_chocolate_consumed[n]}}</td>
+
+                            <td><span class="itemType food">Food</span></td>
+                            <td><span class="itemType chocolate">Chocolate</span></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(items_between_dates['OTHER_FOOD']|length) %}
+                        <tr class="otherFoodsRow">
+                            <td class="name">{{items_between_dates['OTHER_FOOD'][n].capitalize()}}</td>
+                            <td class="initialStock">{{initial_average_other_foods_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_other_foods_stock[n]}}</td>
+
+                            <td>{{item_other_foods_average_consumed[n]}}</td>
+                            <td class="totalConsumed">{{total_item_other_foods_consumed[n]}}</td>
+
+                            <td><span class="itemType food">Food</span></td>
+                            <td><span class="itemType other">Other</span></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        <!-- Beverages -->
+                        {% for n in range(items_between_dates['WATER']|length) %}
+                        <tr class="waterRow">
+                            <td class="name">{{items_between_dates['WATER'][n].capitalize()}}</td>
+
+                            <td class="initialStock">{{initial_average_waters_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_waters_stock[n]}}</td>
+
+                            {% if item_water_average_consumed %}
+                            <td>{{item_water_average_consumed[n]}}</td>
+                            {% else %}
+                            <td>here</td>
+                            {% endif %}
+
+                            {% if total_item_water_consumed %}
+                            <td class="totalConsumed">{{total_item_water_consumed[n]}}</td>
+                            {% else %}
+                            <td>0</td>
+                            {% endif %}
+
+                            <td><span class="itemType drink">Drinks</span></td>
+                            <td><span class="itemType water">Water</span></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(items_between_dates['JUICE']|length) %}
+                        <tr class="juiceRow">
+                            <td class="name">{{items_between_dates['JUICE'][n].capitalize()}}</td>
+
+                            <td class="initialStock">{{initial_average_juices_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_juices_stock[n]}}</td>
+
+                            {% if item_juice_average_consumed %}
+                            <td>{{item_juice_average_consumed[n]}}</td>
+                            {% else %}
+                            <td>0</td>
+                            {% endif %}
+
+                            {% if total_item_juice_consumed %}
+                            <td class="totalConsumed">{{total_item_juice_consumed[n]}}</td>
+                            {% else %}
+                            <td>0</td>
+                            {% endif %}
+
+                            <td><span class="itemType drink">Drinks</span></td>
+                            <td><span class="itemType juice">Juice</span></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(items_between_dates['SODA']|length) %}
+                        <tr class="sodaRow">
+                            <td class="name">{{items_between_dates['SODA'][n].capitalize()}}</td>
+
+                            <td class="initialStock">{{initial_average_sodas_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_sodas_stock[n]}}</td>
+
+                            {% if item_soda_average_consumed %}
+                            <td>{{item_soda_average_consumed[n]}}</td>
+                            {% else %}
+                            <td>0</td>
+                            {% endif %}
+
+                            {% if total_item_soda_consumed %}
+                            <td class="totalConsumed">{{total_item_soda_consumed[n]}}</td>
+                            {% else %}
+                            <td>0</td>
+                            {% endif %}
+
+                            <td><span class="itemType drink">Drinks</span></td>
+                            <td><span class="itemType soda">Soda</span></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for n in range(items_between_dates['OTHER_BEVERAGES']|length) %}
+                        <tr class="otherBeveragesRow">
+                            <td class="name">{{items_between_dates['OTHER_BEVERAGES'][n].capitalize()}}</td>
+
+                            <td class="initialStock">{{initial_average_other_beverages_stock[n]}}</td>
+                            <td class="finalStock">{{final_average_other_beverages_stock[n]}}</td>
+
+                            {% if item_other_beverages_average_consumed %}
+                            <td>{{item_other_beverages_average_consumed[n]}}</td>
+                            {% else %}
+                            <td>0</td>
+                            {% endif %}
+
+                            {% if total_item_other_beverages_consumed %}
+                            <td class="totalConsumed">{{total_item_other_beverages_consumed[n]}}</td>
+                            {% else %}
+                            <td>0</td>
+                            {% endif %}
+
+                            <td><span class="itemType drink">Drinks</span></td>
+                            <td><span class="itemType other">Other</span></td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% if items_added_between_dates: %}
+        <div class="details detailsFood">
+            <div class="ItemsDetails" style="min-height: 0;">
+                <div class="cardHeader" style="min-height: auto;">
+                    <h2 style="color: green;">Elements Added in the Period</h2>
+                </div>
+
+                <table class="foodDetails">
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>Average Initial Stock</td>
+                            <td>Average Final Stock</td>
+                            <td>Average Daily Consume</td>
+                            <td>Total Consumed</td>
+                            <td>Introduction Date</td>
+                            <td>Dates Evaluated</td>
+                            <td>Class</td>
+                            <td>Type</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items_added_between_dates: %}
+                        {% with current_list = items_added_between_dates[item] %}
+                        {% for current_item in current_list: %}
+
+                        <tr class="{{current_item.sub_type.lower()}}Row">
+                            <td class="name">{{current_item.name.capitalize()}}</td>
+
+                            <td class="initialStock">{{current_item.initial_stock_avg}}</td>
+                            <td class="finalStock">{{current_item.final_stock_avg}}</td>
+
+                            <td>{{current_item.daily_consumed}}</td>
+                            <td class="totalConsumed">{{current_item.total_consumed}}</td>
+
+                            <td class="added_date">{{current_item.added_date}}</td>
+                            <td class="dates_evaluated">{{current_item.dates|length}}</td>
+                            
+                            {% if current_item.main_type == 'beverage' %}
+                            <td><span class="itemType drink">Drink</span></td>
+                            {% else %}
+                            <td><span class="itemType food">Food</span></td>
+                            {% endif %}
+                            <td><span class="itemType {{current_item.sub_type.lower()}}">
+                                    {{current_item.sub_type}}</span>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+                        {% endwith %}
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        {% endif %}
+
+        {% if deleted_food_object or deleted_beverages_object: %}
+        <div class="details detailsFood">
+            <div class="ItemsDetails" style="min-height: 0;">
+                <div class="cardHeader" style="min-height: auto;">
+                    <h2 style="color: red;">Elemetents Deleted in the Period</h2>
+                </div>
+
+                <table class="foodDetails">
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>Average Initial Stock</td>
+                            <td>Average Final Stock</td>
+                            <td>Average Daily Consume</td>
+                            <td>Total Consumed</td>
+                            <td>delete Date</td>
+                            <td>Dates Evaluated</td>
+                            <td>Class</td>
+                            <td>Type</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if deleted_food_object: %}
+                        {% for item in deleted_food_object: %}
+                        {% with current_list = deleted_food_object[item] %}
+                        {% for current_item in current_list:  %}
+
+                        <tr class="{{current_item.sub_type.lower()}}Row">
+                            <td class="name">{{current_item.name.capitalize()}}</td>
+
+                            <td class="initialStock">{{current_item.initial_stock_avg}}</td>
+                            <td class="finalStock">{{current_item.final_stock_avg}}</td>
+
+                            <td>{{current_item.daily_consumed}}</td>
+                            <td class="totalConsumed">{{current_item.total_consumed}}</td>
+
+                            <td class="deleted_date">{{current_item.deleted_date}}</td>
+                            <td class="dates_evaluated">{{current_item.dates|length}}</td>
+
+                            <td><span class="itemType food">Food</span></td>
+                            <td><span class="itemType {{current_item.sub_type.lower()}}">
+                                    {{current_item.sub_type}}</span>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+                        {% endwith %}
+                        {% endfor %}
+                        {% endif %}
+
+                        <!-- For beverages -->
+
+                        {% if deleted_beverages_object: %}
+                        {% for item in deleted_beverages_object: %}
+                        {% with current_list = deleted_beverages_object[item] %}
+                        {% for current_item in current_list:  %}
+
+                        <tr class="{{current_item.sub_type.lower()}}Row">
+                            <td>{{current_item.name.capitalize()}}</td>
+
+                            <td class="initialStock">{{current_item.initial_stock_avg}}</td>
+                            <td class="finalStock">{{current_item.final_stock_avg}}</td>
+
+                            <td>{{current_item.daily_consumed}}</td>
+                            <td class="totalConsumed">{{current_item.total_consumed}}</td>
+
+                            <td class="deleted_date">{{current_item.deleted_date}}</td>
+                            <td class="dates_evaluated">{{current_item.dates|length}}</td>
+
+                            <td><span class="itemType drink">Drinks</span></td>
+                            <td><span class="itemType {{current_item.sub_type.lower()}}">
+                                    {{current_item.sub_type}}</span>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+                        {% endwith %}
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if not report_for_share: %}
+    <script src="{{url_for('static', filename='js/reports.js')}}"></script>
+    {% endif %}
+
+</body>
+{% endblock %}
+
+{% include('templates/pantry_footer.html') %}

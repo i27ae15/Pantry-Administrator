@@ -1,0 +1,91 @@
+<div class="container">
+    <div class="navigation" style="left:0;">
+
+        <ul>
+
+            <li>
+                <a href="#">
+                    <span class="icon">
+                        <ion-icon name="storefront-outline"></ion-icon>
+                    </span>
+                    <span class="title">Pantry</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="{{url_for('pantry')}}" id="resumeLink">
+                    <span class="icon">
+                        <ion-icon name="fast-food-outline"></ion-icon>
+                    </span>
+                    <span class="title">Resume</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="{{url_for('food_details')}}" id="foodLink">
+                    <span class="icon">
+                        <ion-icon name="pizza-outline"></ion-icon>
+                    </span>
+                    <span class="title">Food</span>
+                </a>
+
+            </li>
+
+
+            <li>
+                <a href="{{url_for('beverage_details')}}" id="beveragesLink">
+                    <span class="icon">
+                        <ion-icon name="water-outline"></ion-icon>
+                    </span>
+                    <span class="title">Drinks</span>
+                </a>
+            </li>
+
+            {% if current_user.level > 0: %}
+            <li>
+                <a href="{{url_for('people')}}" id="peopleLink">
+                    <span class="icon">
+                        <ion-icon name="people-outline"></ion-icon>
+                    </span>
+                    <span class="title">People</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="{{url_for('reports')}}" id="reportsLink">
+                    <span class="icon">
+                        <ion-icon name="analytics-outline"></ion-icon>
+                    </span>
+                    <span class="title">Reports</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <li>
+                <a href="{{ url_for('documentation') }}" id="reportsLink">
+                    <span class="icon">
+                        <ion-icon name="analytics-outline"></ion-icon>
+                    </span>
+                    <span class="title">Documentation</span>
+                </a>
+            </li>
+
+        
+
+
+            <li>
+                <a href="{{url_for('logout')}}" id="beveragesLink">
+                    <span class="icon">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                    </span>
+                    <span class="title">Log out</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+</div>

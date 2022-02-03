@@ -1,0 +1,165 @@
+:root {
+    --on-hover: #caf0f8;
+}
+
+.h1-title {
+    margin-top: 2.5rem;
+    text-align: center;
+}
+
+.card-style {
+    text-align: center;
+    padding: 5%;
+}
+
+.row-style {
+    width: 100%;
+    margin-top: 12%;
+    padding-left: 8%;
+}
+
+/* Window */
+.enter-window {
+    border: 1px solid gray;
+    border-radius: 15px;
+
+    padding: 2.5rem;
+
+    background-color: white;
+    margin: 5% 18%;
+    width: 62%;
+    position: absolute;
+
+    top: -2rem;
+    visibility: hidden;
+
+    padding: 1% 3% 3%;
+}
+
+#new-client-div {
+    width: 70%;
+    margin: 5% 15%;
+}
+
+/* Close symbol */
+.close-window {
+    position: absolute;
+    left: 92%;
+    top: 35px;
+}
+
+.close-window:hover {
+    cursor: pointer;
+}
+
+.total {
+    /* display: inline-block; */
+    /* position: relative;
+    left: 60%; */
+    float: right;
+}
+
+.visible {
+    visibility: unset;
+}
+
+.invisible {
+    visibility: hidden;
+    position: absolute;
+}
+
+/* Table */
+
+.table-row {
+    cursor: pointer;
+}
+
+.table-row:hover {
+    background-color: var(--on-hover);
+}
+
+/* Clients */
+
+.h1-client {
+    margin: 1% 8% 1% 2%;
+    display: inline-block;
+}
+
+.h1-title-add-client {
+    margin: 2% 5%;
+}
+
+.btn-add-purchase {
+    margin: 5% 5% 5% 35%;
+}
+
+.btn-add-payment {
+    margin: 5% 30% 5% 5%;
+}
+
+/* Forms */
+
+.my-form-label {
+    font-weight: 500;
+    font-size: 22px;
+    margin: 2% 0 0 0;
+    padding-bottom: 0;
+}
+
+/* For one client */
+
+.one-client-header {
+
+    margin: 2% 2% 2% 4%;
+}
+
+.div-btns {
+    margin-bottom: 5%;
+    margin-top: 5%;
+    margin-left: 32%;
+}
+
+.back {
+    display: inline-block;
+    padding: 5px 0%;
+}
+
+.back_clients {
+    margin: 0% 5%;
+}
+
+.total_bolivares {
+    margin-top: 1%;
+}
+
+.visible-field {
+    margin-top: 5%;
+}
+
+/* visible-field{
+    margin-top: 3%;
+} */
+
+.header-diary {
+    margin: 2% 1%;
+
+}
+
+.date-selector {
+    display: inline;
+}
+
+.next-previous-day {
+    position: relative;
+    top: 4px;
+    color: rgb(41, 40, 40);
+    margin: 0 2%;
+}
+
+.next-previous-day:hover {
+    color: black;
+}
+
+.specificDate {
+    padding-top: 20px;
+}

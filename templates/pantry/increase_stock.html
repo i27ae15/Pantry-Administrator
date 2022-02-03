@@ -1,0 +1,107 @@
+{% include('templates/pantry_header.html') %}
+
+{% include('templates/pantry_options.html') %}
+{% include('templates/header.html') %}
+
+{% block increase_stock %}
+
+<style>
+    .addButtons {
+        text-align: center;
+        margin-left: 2%;
+    }
+
+    .addButtons button {
+        margin: 2%;
+    }
+
+    .cardBoxFive {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .formInputs {
+        margin: 2% 5% 5%;
+    }
+
+    tbody input {
+        width: 50px;
+        height: 30px;
+        font-size: 15px;
+    }
+</style>
+
+<body onload="daysOptionsManager(0), selectedOptionsDependingOnDate( '{{day}}', '{{month}}', '{{year}}')">
+    <div class="main">
+
+        <!-- onsubmit="return validatAddItemsForm(); -->
+        <form action="{{url_for('post_increase_stock', increase_food=increase_food)}}" method="POST">
+
+            <div class=" details detailsFood">
+                <!-- order details list -->
+                <div class="ItemsDetails">
+                    <div class="cardHeader">
+                        <h2>Items</h2>
+
+                        <h2></h2>
+                        <h2></h2>
+                        <h2></h2>
+                        <h2></h2>
+                        <h2></h2>
+                      
+
+                        <button type="submit" class="btn btn-primary">Accept</button>
+                        {% if increase_food: %}
+                        <a href="{{url_for('food_details', edit_item=False)}}" type="button" class="btn btn-danger"
+                            id="cancel">cancel</a>
+                        {% else: %}
+                        <a href="{{url_for('beverage_details', edit_item=False)}}" type="button" class="btn btn-danger"
+                            id="cancel">cancel</a>
+                        {% endif %}
+
+
+                    </div>
+                    <table class="foodDetails">
+                        <thead>
+                            <tr>
+                                <td>Type</td>
+                                <td>Name</td>
+                                <td></td>
+                                <td>Add New Stock</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item_type in items_info: %}
+
+                            {% for name in items_info[item_type]: %}
+                            {% if not name == 'to_show':  %}
+                            <tr>
+                                <td><span class="itemType {{item_type}}">{{items_info[item_type]['to_show']}}</span>
+                                </td>
+                                <td>{{name}}</td>
+
+                                <td class="invisible">
+                                    <input class="invisible" type="number" value="{{items_info[item_type][name]}}"
+                                        name="{{item_type}}ID">
+                                </td>
+
+                                <td>
+                                    <input type="number" value="0" min="0" name="{{item_type}}Value">
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+        </form>
+
+    </div>
+    </div>
+</body>
+
+
+
+{% endblock %}
+{% include('templates/pantry_footer.html') %}

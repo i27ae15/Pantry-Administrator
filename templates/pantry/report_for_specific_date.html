@@ -1,0 +1,428 @@
+{% include('templates/pantry_header.html') %}
+
+{% block report_for_specific_date %}
+
+<script src="{{url_for('static', filename='js/datesManager.js')}}" defer></script>
+<script src="{{url_for('static', filename='js/reports.js')}}" defer></script>
+
+<style>
+    .cardForAddTodaysPeople:hover {
+        background: whitesmoke;
+    }
+
+    .cardForPeople {
+        grid-template-columns: repeat(2, 3fr);
+    }
+</style>
+
+{% if not report_for_share: %}
+
+{% include('templates/pantry_options.html') %}
+
+<body
+    onLoad="daysOptionsManager(0), daysOptionsManager(1), daysOptionsManager(2), selectedOptionsDependingOnDate( '{{day}}', '{{month}}', '{{year}}'), getStocks(food=false, beverages=false, visible=false, itemToEvaluate='all')">
+    <div class="main">
+
+        <div class="cardBox cardBoxSearch">
+
+            <div class="card cardForSearch">
+                <div>
+                    <div class="cardTittle">Query by Date</div>
+                    <div class="inputs">
+                        <form action="{{url_for('reports', report_for_share=False)}}" method="POST">
+                            {% with numberInput=0 %}
+                            {% include('templates/inputs_for_date.html') %}
+                            {% endwith %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card cardForSearch">
+                <div>
+                    <div class="cardTittle">Query by a Range Date</div>
+                    <div class="inputs">
+                        <form action="{{url_for('reports', between_dates=True, date=False, report_for_share=False)}}"
+                            onsubmit="return validateDates()" method="POST">
+                            {% with numberInput=1, submit_button=False %}
+                            {% include('templates/inputs_for_date.html') %}
+                            {% endwith %}
+
+                            {% with numberInput=2 %}
+                            {% include('templates/inputs_for_date.html') %}
+                            {% endwith %}
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else: %}
+
+        <body onLoad="getStocks(food=false, beverages=false, visible=false, itemToEvaluate='all')">
+            {% endif %}
+            <!-- cards -->
+
+            <!-- People -->
+            <div class="cardBox cardForPeople" style="margin-left: 25%;">
+
+                <div class="card">
+                    <div>
+                        <div class="numbers">{{people_asisted}}</div>
+                        <div class="cardName">Assistance per Day</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/office/60/000000/conference-call.png"/>
+                    </div>
+                </div>
+
+            </div>
+            {% if get_flashed_messages(): %}
+            <div class="cardBox cardForPeople" style="margin-left: 25%;">
+                <div class="cardForAddTodaysPeople">
+                    <a href="{{url_for('people')}}">
+                        <div>
+                            <div class="cardName" style="color: red; font-size: 20px; font-weight: 600;">
+                                {{get_flashed_messages()[0]}}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="cardBox cardBoxSpecificDate">
+                <!-- CARDS FOR FOOD -->
+                <!-- Initial stock  -->
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="initialFoodStock"></div>
+                        <div class="cardName">Initial Food Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/emoji/80/000000/pizza-emoji.png" />
+                    </div>
+                </div>
+
+                <!-- Finished stock -->
+
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="finalFoodStock"></div>
+                        <div class="cardName">Final Food Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/emoji/80/000000/pizza-emoji.png" />
+                    </div>
+                </div>
+
+                <!-- food expenses -->
+
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="totalFoodConsumption"></div>
+                        <div class="cardName">Food Consumed</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/color/90/000000/pizza-five-eighths.png" />
+                    </div>
+                </div>
+
+                <!-- food added -->
+
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="totalFoodAdded"></div>
+                        <div class="cardName">Food Added</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/color/90/000000/pizza-five-eighths.png" />
+                    </div>
+                </div>
+
+                <!-- CARDS FOR FOOD -->
+                <!-- Initial stock -->
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="initialBeveragesStock"></div>
+                        <div class="cardName">Initial Drinks Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/color/80/000000/water.png"/>
+                    </div>
+                </div>
+
+                <!-- Final stock -->
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="finalBeveragesStock"></div>
+                        <div class="cardName">Final Drinks Stock</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/color/80/000000/water.png"/>
+                    </div>
+                </div>
+
+                <!-- beverages Expenses -->
+
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="totalBeveragesConsumption"></div>
+                        <div class="cardName">Drinks Consumed</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/color/80/000000/water.png"/>
+                    </div>
+                </div>
+
+                <!-- beverages added -->
+
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="totalBeveragesAdded"></div>
+                        <div class="cardName">Drinks Added</div>
+                    </div>
+                    <div class="iconBx">
+                        <img src="https://img.icons8.com/color/80/000000/water.png"/>
+                    </div>
+                </div>
+            </div>
+
+            {% if report_for_share and show_link: %}
+            <div class="card linkContainer">
+                <h5>Click to copy the link to share</h5>
+                <h6 class="invisible">
+                    http://127.0.0.1:5000{{url_for('report_for_specific_date', date=date, day=day, month=month, year=year, report_for_share=True, show_link=False)}}
+                </h6>
+            </div>
+            {% endif %}
+
+
+            <div class="details detailsFood">
+                <!-- order details list -->
+
+                <div class="ItemsDetails">
+                    <div class="cardHeader">
+
+                        <h2><Details></Details></h2>
+                        {% if not report_for_share and current_user.level != 1: %}
+                        <a
+                            href="{{url_for('report_for_specific_date', date=date, day=day, month=month, year=year, report_for_share=True, show_link=True)}}">
+                            <h2>Generate Report</h2>
+                        </a>
+
+                        <a
+                            href="{{url_for('report_for_specific_date', date=date, day=day, month=month, year=year, report_for_share=False, show_link=True, get_previous_date=True, get_next_date=False)}}">
+                            <ion-icon name="arrow-back-outline"></ion-icon>
+                        </a>
+
+                        <h2> {{day}}-{{month}}-{{year}} </h2>
+                        <a
+                            href="{{url_for('report_for_specific_date', date=date, day=day, month=month, year=year, report_for_share=False, show_link=True, get_previous_date=False, get_next_date=True)}}">
+                            <ion-icon name="arrow-forward-outline"></ion-icon>
+                        </a>
+
+
+                        {% else: %}
+
+                        <h2> {{day}}-{{month}}-{{year}} </h2>
+
+                        {% endif %}
+                    </div>
+
+                    <!-- Filters -->
+                    {% include ('templates/filters.html') %}
+
+                    <table class="foodDetails">
+                        <thead>
+                            <tr>
+                                <td>Name</td>
+                                <td>Initial Stock</td>
+                                <td>Added</td>
+                                <td>Consumed</td>
+                                <td>Final Stock</td>
+                                <td>Type</td>
+                                <td>Class</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for n in range(breakfasts) %}
+                            <tr class="breakfastRow">
+                                <td>{{food.breakfasts[n].name}}</td>
+                                <td class="initialStock">{{food.breakfasts[n].initial_stock}}</td>
+                                <td class="added">{{food.breakfasts[n].added}}</td>
+                                <td class="consumption">{{food_expenses.breakfasts[n].consumption}}</td>
+                                <td class="finalStock">{{food.breakfasts[n].stock}}</td>
+
+                                <td><span class="itemType food">Food</span></td>
+                                <td><span class="itemType breakfast">Breakfast</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for n in range(lunch) %}
+                            <tr class="lunchRow">
+                                <td>{{food.lunch[n].name}}</td>
+                                <td class="initialStock">{{food.lunch[n].initial_stock}}</td>
+                                <td class="added">{{food.lunch[n].added}}</td>
+                                <td class="consumption">{{food_expenses.lunch[n].consumption}}</td>
+                                <td class="finalStock">{{food.lunch[n].stock}}</td>
+
+                                <td><span class="itemType food">Food</span></td>
+                                <td><span class="itemType lunch">Lunch</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for n in range(snacks) %}
+                            <tr class="snackRow">
+                                <td>{{food.snacks[n].name}}</td>
+                                <td class="initialStock">{{food.snacks[n].initial_stock}}</td>
+                                <td class="added">{{food.snacks[n].added}}</td>
+                                <td class="consumption">{{food_expenses.snacks[n].consumption}}</td>
+                                <td class="finalStock">{{food.snacks[n].stock}}</td>
+
+                                <td><span class="itemType food">Food</span></td>
+                                <td><span class="itemType snack">Snack</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for n in range(cereals) %}
+                            <tr class="cerealRow">
+                                <td>{{food.cereals[n].name}}</td>
+                                <td class="initialStock">{{food.cereals[n].initial_stock}}</td>
+                                <td class="added">{{food.cereals[n].added}}</td>
+                                <td class="consumption">{{food_expenses.cereals[n].consumption}}</td>
+                                <td class="finalStock">{{food.cereals[n].stock}}</td>
+
+                                <td><span class="itemType food">Food</span></td>
+                                <td><span class="itemType cereal">Cereal</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for n in range(fruits) %}
+                            <tr class="fruitRow">
+                                <td>{{food.fruits[n].name}}</td>
+                                <td class="initialStock">{{food.fruits[n].initial_stock}}</td>
+                                <td class="added">{{food.fruits[n].added}}</td>
+                                <td class="consumption">{{food_expenses.fruits[n].consumption}}</td>
+                                <td class="finalStock">{{food.fruits[n].stock}}</td>
+
+                                <td><span class="itemType food">Food</span></td>
+                                <td><span class="itemType fruit">Fruit</span></td>
+
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for n in range(cookies) %}
+                            <tr class="cookieRow">
+                                <td>{{food.cookies[n].name}}</td>
+                                <td class="initialStock">{{food.cookies[n].initial_stock}}</td>
+                                <td class="added">{{food.cookies[n].added}}</td>
+                                <td class="consumption">{{food_expenses.cookies[n].consumption}}</td>
+                                <td class="finalStock">{{food.cookies[n].stock}}</td>
+
+                                <td><span class="itemType food">Food</span></td>
+                                <td><span class="itemType cookie">Cookie</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for n in range(chocolates) %}
+                            <tr class="chocolateRow">
+                                <td>{{food.chocolates[n].name}}</td>
+                                <td class="initialStock">{{food.chocolates[n].initial_stock}}</td>
+                                <td class="added">{{food.chocolates[n].added}}</td>
+                                <td class="consumption">{{food_expenses.chocolates[n].consumption}}</td>
+                                <td class="finalStock">{{food.chocolates[n].stock}}</td>
+
+                                <td><span class="itemType food">Food</span></td>
+                                <td><span class="itemType chocolate">Chocolate</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for n in range(other_foods) %}
+                            <tr class="otherFoodRow">
+                                <td>{{food.others[n].name}}</td>
+                                <td class="initialStock">{{food.others[n].initial_stock}}</td>
+                                <td class="added">{{food.others[n].added}}</td>
+                                <td class="consumption">{{food_expenses.others[n].consumption}}</td>
+                                <td class="finalStock">{{food.others[n].stock}}</td>
+
+                                <td><span class="itemType food">Food</span></td>
+                                <td><span class="itemType other">Other</span></td>
+
+                            </tr>
+                            {% endfor %}
+                            <!-- Beverages -->
+                            {% for n in range(waters) %}
+                            <tr class="waterRow">
+                                <td>{{beverages.water[n].name}}</td>
+                                <td class="initialStock">{{beverages.water[n].initial_stock}}</td>
+                                <td class="added">{{beverages.water[n].added}}</td>
+                                <td class="consumption">{{beverage_expenses.waters[n].consumption}}</td>
+                                <td class="finalStock">{{beverages.water[n].stock}}</td>
+
+                                <td><span class="itemType drink">Drink</span></td>
+                                <td><span class="itemType water">Water</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for n in range(juices) %}
+                            <tr class="juiceRow">
+                                <td>{{beverages.juices[n].name}}</td>
+                                <td class="initialStock">{{beverages.juices[n].initial_stock}}</td>
+                                <td class="added">{{beverages.juices[n].added}}</td>
+                                <td class="consumption">{{beverage_expenses.juices[n].consumption}}</td>
+                                <td class="finalStock">{{beverages.juices[n].stock}}</td>
+
+                                <td><span class="itemType drink">Drink</span></td>
+                                <td><span class="itemType juice">Juice</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for n in range(sodas) %}
+                            <tr class="sodaRow">
+                                <td>{{beverages.sodas[n].name}}</td>
+                                <td class="initialStock">{{beverages.sodas[n].initial_stock}}</td>
+                                <td class="added">{{beverages.sodas[n].added}}</td>
+                                <td class="consumption">{{beverage_expenses.sodas[n].consumption}}</td>
+                                <td class="finalStock">{{beverages.sodas[n].stock}}</td>
+
+                                <td><span class="itemType drink">Drink</span></td>
+                                <td><span class="itemType soda">Soda</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                            {% for n in range(other_beverages) %}
+                            <tr class="otherBeverageRow">
+                                <td>{{beverages.others[n].name}}</td>
+                                <td class="initialStock">{{beverages.others[n].initial_stock}}</td>
+                                <td class="added">{{beverages.others[n].added}}</td>
+                                <td class="consumption">{{beverage_expenses.others[n].consumption}}</td>
+                                <td class="finalStock">{{beverages.others[n].stock}}</td>
+
+                                <td><span class="itemType drink">Drink</span></td>
+                                <td><span class="itemType other">Other</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+    </div>
+
+</body>
+{% endblock %}
+{% include('templates/pantry_footer.html') %}
