@@ -28,7 +28,7 @@ TODAY = NOW.date()
 
 app = Flask(__name__)
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
-app.config['SECRET_KEY'] = os.environ.get('DATABASE_URL')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['WTF_CSRF_ENABLED'] = True
 Bootstrap(app)
 
