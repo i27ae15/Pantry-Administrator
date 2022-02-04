@@ -1323,7 +1323,7 @@ def documentation():
 
 # autorization is needed to access to these routes
 @app.route('/Pantry')
-# # @login_required
+@login_required
 def pantry():
     # the new dates in the data base must be created since the last date in the record to the present day, and them
     # the attendance will decleare whcih days  have to be included in the reports 
@@ -1356,7 +1356,7 @@ def pantry():
 # look for defaultloads
 @app.route('/comida?<edit_item>&<day>&<month>&<year>&<searcher>', defaults={'edit_item':False, 'day':None, 'month':None, 'year':None, 'searcher':True}, methods=['GET', 'POST'])
 @app.route('/Comida?<edit_item>&<day>&<month>&<year>&<searcher>', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def food_details(edit_item, day, month, year, searcher):
     searcher = get_boolean(searcher)
     if request.method == 'POST' and searcher:
@@ -1392,7 +1392,7 @@ def food_details(edit_item, day, month, year, searcher):
 # routes for beverages
 @app.route('/bebidas?<edit_item>&<day>&<month>&<year>&<searcher>', defaults={'edit_item':False, 'day':None, 'month':None, 'year':None, 'searcher':True}, methods=['GET', 'POST'])
 @app.route('/Bebidas?<edit_item>&<day>&<month>&<year>&<searcher>', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def beverage_details(edit_item, day, month, year, searcher):
     searcher = get_boolean(searcher)
     if request.method == 'POST' and searcher:
@@ -1421,7 +1421,7 @@ def beverage_details(edit_item, day, month, year, searcher):
 
 
 @app.route('/Personas', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def people():
     if request.method == 'POST':
         day = request.form['daySelect0']
@@ -1454,7 +1454,7 @@ def people():
 
 @app.route('/AumentarStockDeBebidas?<increase_food>', defaults={'increase_food':True})
 @app.route('/AumentarStockDeComida?<increase_food>')
-# @login_required
+@login_required
 def get_increase_stock(increase_food):
     increase_food = get_boolean(increase_food)
     # we have to take the name of the food and the beverages in the data base so we can show them in the UI
@@ -1539,7 +1539,7 @@ def get_increase_stock(increase_food):
 
 
 @app.route('/increase_stock?<increase_food>', methods=['POST'])
-# @login_required
+@login_required
 def post_increase_stock(increase_food):
     increase_food = get_boolean(increase_food)
 
@@ -1613,7 +1613,7 @@ def post_increase_stock(increase_food):
 # ------------------------------------------------------------------------------
 @app.route('/decrease_beverages_in_data_base?<int:total_elements>&<food>', methods=['POST'], defaults={'food':False})
 @app.route('/decrease_food_in_data_base?<int:total_elements>&<food>', methods=['POST'])
-# @login_required
+@login_required
 def decrease_items_in_data_base(total_elements, food):
     NEW_STOCK = request.form.getlist('newStock')
     OLD_STOCK = request.form.getlist('oldStock')
@@ -1650,7 +1650,7 @@ def decrease_items_in_data_base(total_elements, food):
 
 @app.route('/agregarNuevasBebidas?<food>', methods=['GET', 'POST'], defaults={'food':False})
 @app.route('/agregarNuevasComidas?<food>', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def add_new_items(food): 
     if request.method == 'POST':
         
