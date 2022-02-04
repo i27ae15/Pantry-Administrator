@@ -1363,7 +1363,7 @@ def food_details(edit_item, day, month, year, searcher):
         day = request.form['daySelect0']
         month = request.form['monthSelect0']
         year = request.form['yearSelect0']
-    elif day is None:
+    elif day is None or day == 'None':
         day = NOW.strftime('%d')
         month = NOW.strftime('%m')
         year = NOW.strftime('%Y')

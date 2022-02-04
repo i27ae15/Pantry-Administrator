@@ -115,13 +115,6 @@
                             <h2 class="btn btn-red" style="color: white;">Cancel</h2>
                         </a> -->
 
-                        {% else: %}
-
-                        {% if current_user.level !=1: %}
-                        <a
-                            href="{{url_for('beverage_details', edit_item=True, day=day, month=month, year=year, searcher=True)}}">
-                            <h2 style="cursor: pointer;">Drecrease Stock</h2>
-                        </a>
                         {% endif %}
 
                         <h2></h2>
