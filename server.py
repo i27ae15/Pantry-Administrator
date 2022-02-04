@@ -28,7 +28,7 @@ TODAY = NOW.date()
 
 app = Flask(__name__)
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SECRET_KEY'] = "(*&a90a8r)(fa89k" # os.environ.get('SECRET_KEY', 'hsd@fweks@$^fiwskq')
 app.config['WTF_CSRF_ENABLED'] = True
 Bootstrap(app)
 
@@ -1372,7 +1372,7 @@ def food_details(edit_item, day, month, year, searcher):
     food = _FoodsInStock.query.get(date)
 
     if food is None:
-        return 'No hay datos de la fecha seleccionada'
+        return 'There is no data for the selected date'
     
     # the default organization in the food details table is for type of food
     breakfasts = food.breakfasts
@@ -1386,7 +1386,7 @@ def food_details(edit_item, day, month, year, searcher):
 
     total_items = len(breakfasts) + len(lunch) + len(snacks) + len(cereals) + len(fruits) + len(cookies) + len(chocolates) + len(others)
 
-    return render_template('pantry/food_details.html', food=food, breakfasts=breakfasts, lunch=lunch, snacks=snacks, cereals=cereals, fruits=fruits, cookies=cookies, chocolates=chocolates, others=others, edit_item=edit_item, total_items=total_items, day=day, month=month, year=year)
+    return render_template('pantry/food_details.html', food=food, breakfasts=breakfasts, lunch=lunch, snacks=snacks, cereals=cereals, fruits=fruits, cookies=cookies, chocolates=chocolates, others=others, edit_item=True, total_items=total_items, day=day, month=month, year=year)
 
 
 # routes for beverages
@@ -1408,7 +1408,7 @@ def beverage_details(edit_item, day, month, year, searcher):
     beverages = _BeveragesInStock.query.get(date)
 
     if beverages is None:
-        return 'No hay datos de la fecha seleccionada'
+        return 'There is no data for the selected date'
 
     waters = beverages.water
     juices = beverages.juices
@@ -1417,7 +1417,7 @@ def beverage_details(edit_item, day, month, year, searcher):
 
     total_items = len(waters) + len(juices) + len(sodas) + len(others)
 
-    return render_template('pantry/beverage_details.html', edit_item=edit_item, total_items=total_items, beverage=beverages, waters=waters, juices=juices, sodas=sodas, others=others, day=day, month=month, year=year)
+    return render_template('pantry/beverage_details.html', edit_item=True, total_items=total_items, beverage=beverages, waters=waters, juices=juices, sodas=sodas, others=others, day=day, month=month, year=year)
 
 
 @app.route('/Personas', methods=['GET', 'POST'])

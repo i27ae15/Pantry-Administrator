@@ -128,19 +128,15 @@
             {% endif %}
         </div>
 
-        {% if not edit_item: %}
-
         {% with numberInput=0 %}
 
-        <div id=dateInput style="margin-left: 25%;">
+        <div id="dateInput" style="margin-left: 25%;">
             <form action="{{url_for('food_details')}}" method="post">
                 {% include('templates/inputs_for_date.html') %}
             </form>
         </div>
 
         {% endwith %}
-
-        {% endif %}
 
         <div class="details detailsFood">
             <!-- order details list -->
@@ -154,7 +150,7 @@
                         <h2>Details</h2>
                         {% if current_user.level != 1:%}
                         <a
-                            href="{{url_for('food_details', edit_item=True, day=day, month=month, year=year, searcher=False)}}">
+                            href="{{url_for('food_details', edit_item=True, day=day, month=month, year=year, searcher=True)}}">
                             <h2 style="cursor: pointer;">Decrease Stock</h2>
                         </a>
                         {% endif %}
@@ -169,9 +165,9 @@
                             <h2 class="btn btn-green" style="color: white;">Confirm</h2>
                         </button>
 
-                        <a href="{{url_for('food_details', edit_item=False)}}">
+                        <!-- <a href="{{url_for('food_details', edit_item=False)}}">
                             <h2 class="btn btn-red" style="color: white;">Cancel</h2>
-                        </a>
+                        </a> -->
 
                         {% else: %}
                         <h2></h2>
